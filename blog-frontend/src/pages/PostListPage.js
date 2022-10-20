@@ -1,11 +1,12 @@
 import React from 'react';
-import Button from '../components/common/Button';
+import AuthForm from '../components/auth/AuthForm';
+import AuthTemplate from '../components/auth/AuthTemplate';
 
 const PostListPage = () => {
   return (
-    <div>
-      <Button>버튼</Button>
-    </div>
+    <AuthTemplate>
+      <AuthForm />
+    </AuthTemplate>
   );
 };
 
