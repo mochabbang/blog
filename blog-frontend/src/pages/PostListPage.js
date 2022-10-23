@@ -1,12 +1,12 @@
 import React from 'react';
-import AuthForm from '../components/auth/AuthForm';
-import AuthTemplate from '../components/auth/AuthTemplate';
+import HeaderContainer from '../containers/common/HeaderContainer';
 
 const PostListPage = () => {
   return (
-    <AuthTemplate>
-      <AuthForm />
-    </AuthTemplate>
+    <>
+      <HeaderContainer />
+      <div>안녕하세요.</div>
+    </>
   );
 };
 
