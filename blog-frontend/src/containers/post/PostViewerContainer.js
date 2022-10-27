@@ -1,17 +1,21 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import PostActionButtons from "../../components/post/PostActionButtons";
 import PostViewer from "../../components/post/PostViewer";
+import { removePost } from "../../lib/api/posts";
 import { readPost, unloadPost } from "../../modules/post";
+import { setOriginalPost } from "../../modules/write";
 
-const PostViewerContainer = ({ match }) => {
+const PostViewerContainer = ({ match, history }) => {
     // 처음 마운트 될 때 포스트 읽기 API 요청
     const { postId } = match.params;
     const dispatch = useDispatch();
-    const { post, error, loading } = useSelector(({ post, loading}) => ({
+    const { post, error, loading, user } = useSelector(({ post, loading, user }) => ({
         post: post.post,
         error: post.error,
         loading: loading['post/READ_POST'],
+        user: user.user,
     }));
 
     useEffect(() => {
@@ -24,8 +28,34 @@ const PostViewerContainer = ({ match }) => {
 
     }, [dispatch, postId]);
 
-    return <PostViewer post={post} loading={loading} error={error} />;
-};
+    const onEdit = () => {
+        dispatch(setOriginalPost(post));
+        history.push('/write');
+    };
 
+    const onRemove = async () => {
+        try {
+            await removePost(postId);
+            history.push('/');      //홈으로 이동
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const onList = () => {
+        history.push('/');
+    }
+
+    const ownPost = (user && user._id) === (post && post.user._id);
+
+    return (
+        <PostViewer 
+            post={post}
+            loading={loading}
+            error={error}
+            actionButtons={ownPost && <PostActionButtons onList={onList} onEdit={onEdit} onRemove={onRemove} />} />
+        
+    );
+};
 
 export default withRouter(PostViewerContainer);
